@@ -11,7 +11,7 @@
 ############################
 
 ###### File Locations #####
-filepath = "C:/Users/acegi/Google Drive/Personal R Projects/USC-Crime-Data/"
+filepath = "G:/My Drive/Personal Projects/USC-Crime-Data/"
 
 library(stringr)
 library(pdftools)
@@ -66,11 +66,19 @@ for(counter in 1:nrow(df)){
 # Removing the rows where it's the header, by removing the rows where the Report_Time isn't filled in [381 rows before cut]
 df = df[!is.na(df$Report_Time),] #326 rows
 
-# 
+# Adding an "Incident Category" 
 df$Incident_Category = sapply(str_extract_all(df$Incident_Type, '\\b[A-Z]+\\b'), paste, collapse=' ')
 
-### This is an assumption, may be untrue. I'm kinda just OCD. GX.
-# # Filling in Report ID, IIF the formula is true
+# Removing the "Summary: " beginning of the description just for readability
+for(x in 1:nrow(df)){
+  df[x, 'Description'] = gsub("Summary: ", "", df[x, 'Description'])
+}
+
+# Adding a date, derived from Report_Time
+df$Date = word(df$Report_Time)
+
+### This is an assumption and may be untrue, hence commented out. Use if you want.
+# # Filling in Report ID, IIF the Report ID for the previous row is -1 and the Report ID for the next row is +1
 # for(x in 1:nrow(df)){
 #   if(is.na(df[x,'Report_ID']) == TRUE){
 #     # row = df[x,'Report_ID'] #lol this is going to be NA because we're filling in the blanks
@@ -83,15 +91,7 @@ df$Incident_Category = sapply(str_extract_all(df$Incident_Type, '\\b[A-Z]+\\b'),
 #   }
 # }
 
-# Removing the "Summary: " beginning of the description just for readability
-for(x in 1:nrow(df)){
-  df[x, 'Description'] = gsub("Summary: ", "", df[x, 'Description'])
-}
+# Reorder before saving
+df = df[,c("Report_ID", "Date", "Status", "Location", "Incident_Category", "Incident_Type", "Description", "Report", "Report_Time", "Length")]
 
-# Adding a date, derived from Report_Time
-df$Date = word(df$Report_Time)
-
-# Removing the original "Report" column since we've gathered all the information
-df$Report = NULL
-
-write.csv(df, file = paste(filepath,"dps_crime_logs_2017.csv", sep=""))
+write.csv(df, file = paste(filepath,"dps_crime_logs_2017.csv", sep=""), row.names = FALSE)

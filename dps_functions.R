@@ -1,6 +1,6 @@
 ##### DPS Crime Log Functions #####
 
-##### Making all of the functions ######
+##### Making all of the functions (ctrl + A, ctrl + enter. to get all functions) ######
 # Report ID - "Report #: " - "\r\nOccurred:" #####
 getReportID = function(x){
   x = str_match(x, "Report #: (.*?)\r\nOccurred")
