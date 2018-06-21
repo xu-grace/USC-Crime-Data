@@ -2,7 +2,8 @@
 PDF scrape of reports by the USC Department of Public Safety
 
 Files:
--Raw data: CIS 2017.pdf
+
+- Raw data: CIS 2017.pdf
 - Prep scripts: dps_functions.R, dps_crime_logs.R
 - Clean data in csv: dps_crime_logs_2017.csv
 
